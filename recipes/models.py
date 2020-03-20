@@ -17,7 +17,7 @@ class Recipe(models.Model):
     ]
 
     name = models.CharField(max_length=255)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
     is_public = models.BooleanField(default=False)
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     prep_time = models.IntegerField(validators = [MinValueValidator(0)])

@@ -9,6 +9,8 @@ import RecipeForm from './../components/RecipeForm';
 
 import ProfileList from './../components/ProfileList';
 
+axios.defaults.headers.common["Authorization"] = `Token ${localStorage.getItem('ccs-batch-maker-token')}`;
+
 class App extends Component  {
 
   constructor(props) {
@@ -24,6 +26,7 @@ class App extends Component  {
   }
 
   componentDidMount() {
+
      axios.get(`/api/v1/recipes/`)
      .then(res => {
          this.setState({recipes: res.data});
@@ -39,15 +42,13 @@ class App extends Component  {
      .catch(error => {
          console.log(error);
      });
-   }
-
+}
    handleLogin(e, user) {
     e.preventDefault();
     axios.post(`/api/v1/rest-auth/login/`, user)
     .then(res => {
-        console.log(res);
+        // console.log(res);
         localStorage.setItem('ccs-batch-maker-token', res.data.key);
-        axios.defaults.headers.common["Authorization"] = `Token ${localStorage.getItem('ccs-batch-maker-token')}`;
     })
     .catch(error => {
         console.log(error);
@@ -58,7 +59,7 @@ class App extends Component  {
    handleLogout(e) {
      axios.post(`/api/v1/rest-auth/logout/`)
      .then(res => {
-         console.log(res);
+         // console.log(res);
          localStorage.removeItem('ccs-batch-maker-token');
      })
      .catch(error => {
@@ -70,12 +71,9 @@ class App extends Component  {
      e.preventDefault();
 
      let {recipes} = this.state;
-
      const keys = Object.keys(recipe);
-     // console.log('keys', keys);
 
      let formData = new FormData();
-
      keys.forEach(key => formData.append(key, recipe[key]));
 
      axios.post(`/api/v1/recipes/`, formData)
@@ -91,14 +89,14 @@ class App extends Component  {
    }
 
   render() {
-    console.log(this.state.users);
+    // console.log(this.state.users);
     return (
       <React.Fragment>
         <button type='button' onClick={this.handleLogout}>Logout</button>
         <LoginForm handleSubmit={this.handleLogin}/>
-        {/*<RecipeForm handleSubmit={this.addRecipe}/>*/}
+        <RecipeForm handleSubmit={this.addRecipe}/>
         {/*<RecipeList recipes={this.state.recipes}/>*/}
-        <ProfileList users={this.state.users}/>
+        {/*<ProfileList users={this.state.users}/>*/}
       </React.Fragment>
     );
   }
