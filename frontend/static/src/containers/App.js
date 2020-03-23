@@ -9,6 +9,7 @@ import Footer from './../components/Footer';
 
 import RecipeList from './../components/RecipeList';
 import RecipeForm from './../components/RecipeForm';
+import RecipeDetail from './../components/RecipeDetail';
 
 import LoginForm from './../components/LoginForm';
 import ProfileList from './../components/ProfileList';
@@ -20,7 +21,8 @@ class App extends Component {
     this.state = {
       recipes: [],
       users: [],
-      isLoggedIn: false
+      isLoggedIn: false,
+      selectedRecipe: null
     }
 
     this.addRecipe = this.addRecipe.bind(this);
@@ -28,13 +30,15 @@ class App extends Component {
     this.fetchUsers = this.fetchUsers.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.selectRecipe = this.selectRecipe.bind(this);
   }
 
   componentDidMount() {
-
     if (localStorage.getItem('ccs-batch-maker-token')) {
       axios.defaults.headers.common["Authorization"] = `Token ${localStorage.getItem('ccs-batch-maker-token')}`;
-      this.setState({isLoggedIn: true});
+      this.setState({
+        isLoggedIn: true
+      }, () => this.props.history.push('/recipes/'));
       this.fetchUsers();
       this.fetchRecipes();
     }
@@ -102,18 +106,26 @@ class App extends Component {
     });
   }
 
+  selectRecipe(selectedRecipe) {
+    this.setState({
+      selectedRecipe
+    }, () => this.props.history.push(`/recipes/${selectedRecipe.id}`));
+  }
+
   render() {
-    // console.log('app props', this.props);
-    return (<React.Fragment>
-      <Header isLoggedIn={this.state.isLoggedIn} handleLogout={this.handleLogout}/>
-      <Switch>
-        <Route path="/login/" render={() => <LoginForm handleSubmit={this.handleLogin}/>}/>
-        <Route path="/recipes/new/" render={() => <RecipeForm handleSubmit={this.addRecipe}/>}/>
-        <Route path="/recipes/" render={() => <RecipeList recipes={this.state.recipes}/>}/>
-        <Route path="/users/" render={() => <ProfileList users={this.state.users}/>}/>
-      </Switch>
-      <Footer/>
-    </React.Fragment>);
+    console.log('this app.js')
+    return (
+      <React.Fragment>
+        <Header isLoggedIn={this.state.isLoggedIn} handleLogout={this.handleLogout}/>
+        <Switch>
+          <Route path="/login/" render={() => <LoginForm handleSubmit={this.handleLogin}/>}/>
+          <Route path="/recipes/new/" render={() => <RecipeForm handleSubmit={this.addRecipe}/>}/>
+          <Route path="/recipes/:id/" render={() => <RecipeDetail selectedRecipe={this.state.selectedRecipe} />}/>
+          <Route path="/recipes/" render={() => <RecipeList recipes={this.state.recipes} selectRecipe={this.selectRecipe}/>}/>
+          <Route path="/users/" render={() => <ProfileList users={this.state.users}/>}/>
+        </Switch>
+        <Footer/>
+      </React.Fragment>);
   }
 }
 

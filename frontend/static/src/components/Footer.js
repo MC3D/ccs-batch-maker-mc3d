@@ -3,7 +3,7 @@ import React from 'react';
 function Footer(props) {
   return (
     <footer>
-      <span>I am the footer</span>
+      <p>© 2020 MC3D</p>
     </footer>
   )
 }

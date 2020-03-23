@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import requireAuth from './RequireAuth';
 
 class RecipeForm extends Component {
 
@@ -51,6 +52,7 @@ class RecipeForm extends Component {
 
 
   render() {
+    // console.log(this.props)
     return (
       <form onSubmit={(e) => this.props.handleSubmit(e, this.state)}>
         <input type="file" name='image' onChange = {this.handleImage}/>
@@ -110,4 +112,4 @@ class RecipeForm extends Component {
 
 
 
-export default RecipeForm;
+export default requireAuth(RecipeForm);

@@ -1,11 +1,12 @@
 import React from 'react';
+import {Link} from "react-router-dom";
+import requireAuth from './RequireAuth';
 
 function RecipeList(props) {
-  // console.log('recipe list props', props);
-  const recipes = props.recipes.map(recipe => <li key={recipe.id}>{recipe.name}</li>)
+  const recipes = props.recipes.map(recipe => <li key={recipe.id}><button type='button' onClick={() => props.selectRecipe(recipe)}>{recipe.name}</button></li>)
   return (
     <ul>{recipes}</ul>
   );
 }
 
-export default RecipeList;
+export default requireAuth(RecipeList);

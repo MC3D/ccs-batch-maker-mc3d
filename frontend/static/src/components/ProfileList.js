@@ -1,7 +1,8 @@
 import React from 'react';
+import requireAuth from './RequireAuth';
 
 function ProfileList(props) {
-  console.log(props);
+  // console.log(props);
 
   const users = props.users.map(user => (
     <li key={user.id}>
@@ -21,4 +22,4 @@ function ProfileList(props) {
   );
 }
 
-export default ProfileList;
+export default requireAuth(ProfileList);

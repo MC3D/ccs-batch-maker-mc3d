@@ -5,5 +5,6 @@ from . import views
 app_name = 'recipes'
 
 urlpatterns = [
+    path('<int:pk>/', views.RecipeRetrieveUpdateDestroyAPIView.as_view(), name='recipe_retrieve_update_destroy_api'),
     path('', views.RecipeListCreateAPIView.as_view(), name='recipe_list_create_api'),
 ]

@@ -19,6 +19,7 @@ class LoginForm extends Component {
   }
 
   render() {
+    // console.log('login props', this.props)
     return (
       <form onSubmit={(e) => this.props.handleSubmit(e, this.state)}>
 
