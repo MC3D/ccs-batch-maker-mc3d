@@ -31,7 +31,7 @@ class LoginForm extends Component {
         <label htmlFor="password">Password</label>
         <input type="password" id="password" name="password" value={this.state.password} onChange={this.handleInput}/>
 
-        <button>Login!</button>
+        <button>Sign In</button>
       </form>
     )
   }
