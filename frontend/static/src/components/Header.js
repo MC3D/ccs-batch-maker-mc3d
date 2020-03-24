@@ -13,7 +13,7 @@ function Header(props) {
           <li><button type='button' onClick={props.handleLogout}>Logout</button></li>
         </React.Fragment>
       ) : (
-        <li><a href="/login/">Login</a></li>
+        <li><NavLink to="/login/">Login</NavLink></li>
       )}
     </ul>
     </header>

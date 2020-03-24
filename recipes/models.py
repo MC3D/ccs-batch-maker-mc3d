@@ -32,3 +32,10 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name[:50]
+
+class Step(models.Model):
+    pass
+
+
+class Ingredient(models.Model):
+    pass

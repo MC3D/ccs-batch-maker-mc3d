@@ -12,6 +12,7 @@ import RecipeForm from './../components/RecipeForm';
 import RecipeDetail from './../components/RecipeDetail';
 
 import LoginForm from './../components/LoginForm';
+import RegistrationForm from './../components/RegistrationForm';
 import ProfileList from './../components/ProfileList';
 
 class App extends Component {
@@ -31,6 +32,7 @@ class App extends Component {
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.selectRecipe = this.selectRecipe.bind(this);
+    this.handleRegistration = this.handleRegistration.bind(this);
   }
 
   componentDidMount() {
@@ -88,6 +90,10 @@ class App extends Component {
     });
   }
 
+  handleRegistration(e) {
+    console.log(e);
+  }
+
   addRecipe(e, recipe) {
     e.preventDefault();
 
@@ -118,6 +124,7 @@ class App extends Component {
       <React.Fragment>
         <Header isLoggedIn={this.state.isLoggedIn} handleLogout={this.handleLogout}/>
         <Switch>
+          <Route path="/register/" render={() => <RegistrationForm handleSubmit={this.handleRegistration}/>}/>
           <Route path="/login/" render={() => <LoginForm handleSubmit={this.handleLogin}/>}/>
           <Route path="/recipes/new/" render={() => <RecipeForm handleSubmit={this.addRecipe}/>}/>
           <Route path="/recipes/:id/" render={() => <RecipeDetail selectedRecipe={this.state.selectedRecipe} />}/>
