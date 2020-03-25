@@ -6,6 +6,7 @@ function ProfileList(props) {
 
   const users = props.users.map(user => (
     <li key={user.id}>
+      <button type='button' onClick={() => props.followUser(user)}>Follow</button>
       <h1>{user.username}</h1>
       <p>{user.profile && user.profile.city}</p>
       <h2>Following</h2>

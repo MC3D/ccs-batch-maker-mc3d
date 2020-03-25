@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 
 from rest_framework import generics
@@ -33,3 +33,7 @@ class ProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 class ConnectionListCreateAPIView(generics.ListCreateAPIView):
     queryset = Connection.objects.all()
     serializer_class = ConnectionSerializer
+
+    def perform_create(self, serializer):
+        following = get_object_or_404(User, pk=self.kwargs['pk'])
+        serializer.save(user=self.request.user, following=following)

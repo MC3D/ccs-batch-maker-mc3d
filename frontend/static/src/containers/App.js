@@ -11,6 +11,9 @@ import RecipeList from './../components/RecipeList';
 import RecipeForm from './../components/RecipeForm';
 import RecipeDetail from './../components/RecipeDetail';
 
+import IngredientList from './../components/IngredientList';
+import IngredientForm from './../components/IngredientForm';
+
 import LoginForm from './../components/LoginForm';
 import RegistrationForm from './../components/RegistrationForm';
 import ProfileList from './../components/ProfileList';
@@ -29,6 +32,7 @@ class App extends Component {
     this.addRecipe = this.addRecipe.bind(this);
     this.fetchRecipes = this.fetchRecipes.bind(this);
     this.fetchUsers = this.fetchUsers.bind(this);
+    this.followUser = this.followUser.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.selectRecipe = this.selectRecipe.bind(this);
@@ -75,7 +79,6 @@ class App extends Component {
     }).catch(error => {
       console.log('error logging in', error);
     });
-
   }
 
   handleLogout(e) {
@@ -112,6 +115,14 @@ class App extends Component {
     });
   }
 
+  followUser(user) {
+    axios.post(`/api/v1/accounts/${user.id}/connections/`).then(res => {
+      console.log(res);
+    }).catch(error => {
+      console.log('error adding recipe', error);
+    });
+  }
+
   selectRecipe(selectedRecipe) {
     this.setState({
       selectedRecipe
@@ -124,12 +135,14 @@ class App extends Component {
       <React.Fragment>
         <Header isLoggedIn={this.state.isLoggedIn} handleLogout={this.handleLogout}/>
         <Switch>
-          <Route path="/register/" render={() => <RegistrationForm handleSubmit={this.handleRegistration}/>}/>
-          <Route path="/login/" render={() => <LoginForm handleSubmit={this.handleLogin}/>}/>
+          <Route path="/ingredients/:id/edit/" render={() => <IngredientForm />}/>
           <Route path="/recipes/new/" render={() => <RecipeForm handleSubmit={this.addRecipe}/>}/>
           <Route path="/recipes/:id/" render={() => <RecipeDetail selectedRecipe={this.state.selectedRecipe} />}/>
+          <Route path="/pantry/" render={() => <IngredientList />}/>
+          <Route path="/login/" render={() => <LoginForm handleSubmit={this.handleLogin}/>}/>
           <Route path="/recipes/" render={() => <RecipeList recipes={this.state.recipes} selectRecipe={this.selectRecipe}/>}/>
-          <Route path="/users/" render={() => <ProfileList users={this.state.users}/>}/>
+          <Route path="/register/" render={() => <RegistrationForm handleSubmit={this.handleRegistration}/>}/>
+          <Route path="/users/" render={() => <ProfileList users={this.state.users} followUser={this.followUser}/>}/>
         </Switch>
         <Footer/>
       </React.Fragment>);

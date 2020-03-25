@@ -7,8 +7,9 @@ function Header(props) {
     <ul className="menu">
       {props.isLoggedIn ? (
         <React.Fragment>
-          <li><NavLink to="/recipes/new/">New Recipe</NavLink></li>
           <li><NavLink to="/recipes/">Recipes</NavLink></li>
+          <li><NavLink to="/recipes/new/">New Recipe</NavLink></li>
+          <li><NavLink to="/pantry/">Pantry</NavLink></li>
           <li><NavLink to="/users/">Find Users</NavLink></li>
           <li><button type='button' onClick={props.handleLogout}>Logout</button></li>
         </React.Fragment>

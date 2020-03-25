@@ -7,6 +7,7 @@ export default (ProtectedRoute) => {
     //   super(props);
     // }
     render() {
+      // need to bring this in from App state REFACTOR!!!
       if (!localStorage.getItem('ccs-batch-maker-token')) {
         return <Redirect to="/login/" />
       }
