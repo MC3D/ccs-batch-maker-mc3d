@@ -67,7 +67,7 @@ class LoginForm extends Component {
               onChange={this.handleInput}
             />
 
-          <Button variant="contained" color="primary" onClick={(e) => this.props.handleSubmit(e, this.state)}>Sign In</Button>
+        <Button variant="contained" color="primary" type='submit'>Sign In</Button>
         <Link to="/register/">Don't have an account? Register</Link>
       </form>
     )

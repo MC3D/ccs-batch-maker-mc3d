@@ -1,4 +1,5 @@
 from django.core.validators import MinValueValidator
+from django.utils.timezone import now
 from django.conf import settings
 from django.db import models
 
@@ -18,6 +19,7 @@ class Recipe(models.Model):
 
     name = models.CharField(max_length=255)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
+    # created = models.DateTimeField(default=now, editable=False)
     is_public = models.BooleanField(default=False)
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     prep_time = models.IntegerField(validators = [MinValueValidator(0)])

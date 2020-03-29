@@ -83,7 +83,7 @@ class RegistrationForm extends Component {
               onChange={this.handleInput}
             />
 
-        <Button variant="contained" color="primary" onClick={(e) => this.props.handleSubmit(e, this.state)}>Register</Button>
+        <Button variant="contained" color="primary">Register</Button>
         <Link to="/login/">Already have an account? Login</Link>
       </form>
     )

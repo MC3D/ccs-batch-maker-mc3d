@@ -26,7 +26,8 @@ class App extends Component {
       recipes: [],
       users: [],
       isLoggedIn: false,
-      selectedRecipe: null
+      selectedRecipe: null,
+      result: 'No result'
     }
 
     this.addRecipe = this.addRecipe.bind(this);
@@ -44,7 +45,7 @@ class App extends Component {
       axios.defaults.headers.common["Authorization"] = `Token ${localStorage.getItem('ccs-batch-maker-token')}`;
       this.setState({
         isLoggedIn: true
-      }, () => this.props.history.push('/recipes/'));
+      });
       this.fetchUsers();
       this.fetchRecipes();
     }
@@ -130,7 +131,6 @@ class App extends Component {
   }
 
   render() {
-    console.log('this app.js')
     return (
       <React.Fragment>
         <Header isLoggedIn={this.state.isLoggedIn} handleLogout={this.handleLogout}/>
@@ -138,7 +138,8 @@ class App extends Component {
           <Route path="/ingredients/:id/edit/" render={() => <IngredientForm />}/>
           <Route path="/recipes/new/" render={() => <RecipeForm handleSubmit={this.addRecipe}/>}/>
           <Route path="/recipes/:id/" render={() => <RecipeDetail selectedRecipe={this.state.selectedRecipe} />}/>
-          <Route path="/pantry/" render={() => <IngredientList />}/>
+          <Route path="/ingredients/new/" render={() => <IngredientForm />}/>
+          <Route path="/ingredients/" render={() => <IngredientList />}/>
           <Route path="/login/" render={() => <LoginForm handleSubmit={this.handleLogin}/>}/>
           <Route path="/recipes/" render={() => <RecipeList recipes={this.state.recipes} selectRecipe={this.selectRecipe}/>}/>
           <Route path="/register/" render={() => <RegistrationForm handleSubmit={this.handleRegistration}/>}/>

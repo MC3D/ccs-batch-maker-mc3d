@@ -21,10 +21,17 @@ class RecipeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
 
 
-class UserRecipeListAPIView(generics.ListAPIView):
+class RecipesListbyUserAPIView(generics.ListAPIView):
     serializer_class = RecipeSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         user = self.request.user
-        return Purchase.objects.filter(owner=user)
+        return Recipe.objects.filter(owner=user)
+
+class RecipeListbyFollowerAPIView(generics.ListAPIView):
+    serializer_class = RecipeSerializer
+
+    def get_queryset(self):
+        # use double underscores (__) to look "through" relations
+        return Recipe.objects.filter(owner__following_set__user=self.request.user)
