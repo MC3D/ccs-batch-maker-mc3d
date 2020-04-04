@@ -6,13 +6,15 @@ from .permissions import IsOwnerOrReadOnly
 
 
 class RecipeListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    # modify to return public recipes and recipes of logged in user
+    def get_queryset(self):
+        return Recipe.objects.filter(is_public=True)
+
     def perform_create(self, serializer):
-        user = self.request.user
-        serializer.save(owner=user)
+        serializer.save(owner=self.request.user)
 
 
 class RecipeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -20,16 +22,19 @@ class RecipeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RecipeSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-
-class RecipesListbyUserAPIView(generics.ListAPIView):
-    serializer_class = RecipeSerializer
-    permission_classes = [IsOwnerOrReadOnly]
-
+    # update to filter by is_public or is owner to view
     def get_queryset(self):
-        user = self.request.user
-        return Recipe.objects.filter(owner=user)
+        return Recipe.objects.filter(is_public=True)
 
-class RecipeListbyFollowerAPIView(generics.ListAPIView):
+
+# class RecipeListByFollowerAPIView(generics.ListAPIView):
+#     serializer_class = RecipeSerializer
+#     permission_classes = [IsOwnerOrReadOnly]
+#
+#     def get_queryset(self):
+#         return Recipe.objects.filter(owner=self.request.user)
+
+class RecipeListByFollowerAPIView(generics.ListAPIView):
     serializer_class = RecipeSerializer
 
     def get_queryset(self):

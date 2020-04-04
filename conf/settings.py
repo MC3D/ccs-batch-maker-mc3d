@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'api.apps.ApiConfig',
     'frontend.apps.FrontendConfig',
-    'pantries.apps.PantriesConfig',
     'recipes.apps.RecipesConfig',
 ]
 
@@ -159,3 +158,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/3.0/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
 
 AUTH_USER_MODEL = 'accounts.User'
+
+# https://django-rest-auth.readthedocs.io/en/latest/configuration.html
+REST_AUTH_SERIALIZERS = {
+    'TOKEN_SERIALIZER': 'accounts.serializers.TokenSerializer',
+}

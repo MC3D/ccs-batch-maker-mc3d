@@ -16,7 +16,9 @@ import IngredientForm from './../components/IngredientForm';
 
 import LoginForm from './../components/LoginForm';
 import RegistrationForm from './../components/RegistrationForm';
-import ProfileList from './../components/ProfileList';
+
+import Following from './../components/Following';
+import Followers from './../components/Followers';
 
 class App extends Component {
 
@@ -24,7 +26,8 @@ class App extends Component {
     super(props);
     this.state = {
       recipes: [],
-      users: [],
+      following: [],
+      followers: [],
       isLoggedIn: false,
       selectedRecipe: null,
       result: 'No result'
@@ -32,8 +35,9 @@ class App extends Component {
 
     this.addRecipe = this.addRecipe.bind(this);
     this.fetchRecipes = this.fetchRecipes.bind(this);
-    this.fetchUsers = this.fetchUsers.bind(this);
-    this.followUser = this.followUser.bind(this);
+    this.fetchFollowing = this.fetchFollowing.bind(this);
+    this.fetchFollowers = this.fetchFollowers.bind(this);
+    // this.followUser = this.followUser.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.selectRecipe = this.selectRecipe.bind(this);
@@ -41,17 +45,35 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (localStorage.getItem('ccs-batch-maker-token')) {
-      axios.defaults.headers.common["Authorization"] = `Token ${localStorage.getItem('ccs-batch-maker-token')}`;
+    if (localStorage.getItem('ccs-batch-maker-user')) {
+      const token = JSON.parse(localStorage.getItem('ccs-batch-maker-user')).key;
+      axios.defaults.headers.common["Authorization"] = `Token ${token}`;
       this.setState({
         isLoggedIn: true
       });
-      this.fetchUsers();
       this.fetchRecipes();
     }
   }
 
-  fetchRecipes() {
+  fetchFollowers(user) {
+    // let user = JSON.parse(localStorage.getItem('ccs-batch-maker-user')).user.id;
+    axios.get(`/api/v1/users/${user}/followers`).then(res => {
+      this.setState({followers: res.data});
+    }).catch(error => {
+      console.log('error fetching users', error);
+    });
+  }
+
+  fetchFollowing(user) {
+    // let user = JSON.parse(localStorage.getItem('ccs-batch-maker-user')).user.id;
+    axios.get(`/api/v1/users/${user}/following`).then(res => {
+      this.setState({following: res.data});
+    }).catch(error => {
+      console.log('error fetching users', error);
+    });
+  }
+
+  fetchRecipes(user) {
     axios.get(`/api/v1/recipes/`).then(res => {
       this.setState({recipes: res.data});
     }).catch(error => {
@@ -59,24 +81,15 @@ class App extends Component {
     });
   }
 
-  fetchUsers() {
-    axios.get(`/api/v1/accounts/`).then(res => {
-      this.setState({users: res.data});
-    }).catch(error => {
-      console.log('error fetching users', error);
-    });
-  }
-
   handleLogin(e, user) {
     e.preventDefault();
     axios.post(`/api/v1/rest-auth/login/`, user).then(res => {
-      localStorage.setItem('ccs-batch-maker-token', res.data.key);
+      localStorage.setItem('ccs-batch-maker-user', JSON.stringify(res.data));
       axios.defaults.headers.common["Authorization"] = `Token ${res.data.key}`;
       this.setState({
         isLoggedIn: true
       }, () => this.props.history.push('/recipes/'));
       this.fetchRecipes();
-      this.fetchUsers();
     }).catch(error => {
       console.log('error logging in', error);
     });
@@ -84,7 +97,7 @@ class App extends Component {
 
   handleLogout(e) {
     axios.post(`/api/v1/rest-auth/logout/`).then(res => {
-      localStorage.removeItem('ccs-batch-maker-token');
+      localStorage.removeItem('ccs-batch-maker-user');
       delete axios.defaults.headers.common["Authorization"];
       this.setState({
         isLoggedIn: false
@@ -116,13 +129,13 @@ class App extends Component {
     });
   }
 
-  followUser(user) {
-    axios.post(`/api/v1/accounts/${user.id}/connections/`).then(res => {
-      console.log(res);
-    }).catch(error => {
-      console.log('error adding recipe', error);
-    });
-  }
+  // followUser(user, following) {
+  //   axios.post(`/api/v1/users/connections/`, {user, following}).then(res => {
+  //     console.log(res);
+  //   }).catch(error => {
+  //     console.log('error adding recipe', error);
+  //   });
+  // }
 
   selectRecipe(selectedRecipe) {
     this.setState({
@@ -131,10 +144,13 @@ class App extends Component {
   }
 
   render() {
+    const user = localStorage.getItem('ccs-batch-maker-user') ? JSON.parse(localStorage.getItem('ccs-batch-maker-user')).id : null;
     return (
       <React.Fragment>
         <Header isLoggedIn={this.state.isLoggedIn} handleLogout={this.handleLogout}/>
         <Switch>
+          <Route path={`/accounts/${user}/following/`} render={() => <Following users={this.state.following} fetchData={() => this.fetchFollowing(user)}/>}/>
+          <Route path={`/accounts/${user}/followers/`} render={() => <Followers users={this.state.followers} fetchData={() => this.fetchFollowers(user)}/>}/>
           <Route path="/ingredients/:id/edit/" render={() => <IngredientForm />}/>
           <Route path="/recipes/new/" render={() => <RecipeForm handleSubmit={this.addRecipe}/>}/>
           <Route path="/recipes/:id/" render={() => <RecipeDetail selectedRecipe={this.state.selectedRecipe} />}/>
@@ -143,7 +159,6 @@ class App extends Component {
           <Route path="/login/" render={() => <LoginForm handleSubmit={this.handleLogin}/>}/>
           <Route path="/recipes/" render={() => <RecipeList recipes={this.state.recipes} selectRecipe={this.selectRecipe}/>}/>
           <Route path="/register/" render={() => <RegistrationForm handleSubmit={this.handleRegistration}/>}/>
-          <Route path="/users/" render={() => <ProfileList users={this.state.users} followUser={this.followUser}/>}/>
         </Switch>
         <Footer/>
       </React.Fragment>);

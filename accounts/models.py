@@ -32,6 +32,3 @@ class Connection(models.Model):
     # Connection with this User and Following already exists error if you try to duplicate
     class Meta:
         unique_together = (('user', 'following'),)
-
-    def __str__(self):
-        return self.user.username
