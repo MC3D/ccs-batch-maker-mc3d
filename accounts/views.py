@@ -1,5 +1,5 @@
-from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 from rest_framework import generics
 
@@ -7,6 +7,21 @@ from .serializers import ProfileSerializer, UserSerializer, ConnectionSerializer
 from .models import Profile, Connection
 
 User = get_user_model()
+
+
+class FollowingListAPIView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.filter(following_set__user=self.kwargs['pk'])
+
+
+class FollowersListAPIView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.filter(follower_set__following=self.kwargs['pk'])
+
 
 class UserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
@@ -30,7 +45,8 @@ class ProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class ConnectionListCreateAPIView(generics.ListCreateAPIView):
+
+class ConnectionCreateAPIView(generics.CreateAPIView):
     queryset = Connection.objects.all()
     serializer_class = ConnectionSerializer
 
