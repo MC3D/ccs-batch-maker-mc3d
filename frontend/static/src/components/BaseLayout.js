@@ -19,7 +19,6 @@ class BaseLayout extends Component {
       .then((response) => response.json())
       .then((data) => {
         localStorage.removeItem('ccs-batch-maker');
-        this.setState({isAuthenticated: false});
         this.props.history.push('/accounts/login');
       })
       .catch((error) => {

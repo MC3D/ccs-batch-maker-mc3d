@@ -28,7 +28,7 @@ const Header = (props) => {
           <Link href="/recipes/new" color="inherit">New Recipe</Link>
           { props.isAuthenticated
             ? (
-              <Link component="button" variant="body1" color="inherit" onClick={props.handleLogout}>Logout</Link>
+              <Link component="button" variant="body1" color="inherit" onClick={props.logout}>Logout</Link>
             ) : (
               <Link href="/accounts/login" color="inherit">Login</Link>
             )
