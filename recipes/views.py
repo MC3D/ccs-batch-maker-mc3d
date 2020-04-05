@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, authentication
 
 from .serializers import RecipeSerializer
 from .models import Recipe
@@ -8,6 +8,7 @@ from .permissions import IsOwnerOrReadOnly
 class RecipeListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = RecipeSerializer
     permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [authentication.TokenAuthentication]
 
     # modify to return public recipes and recipes of logged in user
     def get_queryset(self):
@@ -21,6 +22,7 @@ class RecipeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = [IsOwnerOrReadOnly]
+    authentication_classes = [authentication.TokenAuthentication]
 
     # update to filter by is_public or is owner to view
     def get_queryset(self):
@@ -36,6 +38,7 @@ class RecipeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 class RecipeListByFollowerAPIView(generics.ListAPIView):
     serializer_class = RecipeSerializer
+    authentication_classes = [authentication.TokenAuthentication]
 
     def get_queryset(self):
         # use double underscores (__) to look "through" relations
