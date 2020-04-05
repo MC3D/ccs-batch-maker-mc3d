@@ -1,19 +1,48 @@
 import React from 'react';
-import { NavLink } from "react-router-dom";
+import PropTypes from 'prop-types';
+import { AppBar, Toolbar, Typography, Link } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-const Header = () => (
-    <header>
-    <ul className="menu">
-      <li><NavLink to="/recipes/">Recipes</NavLink></li>
-      <li><NavLink to="/recipes/new/">New Recipe</NavLink></li>
-      <li><NavLink to="/pantry/">Pantry</NavLink></li>
-      {/* NEED TO MAKE URLS DYNAMIC */}
-      <li><NavLink to={`/accounts/2/following/`}>Following</NavLink></li>
-      <li><NavLink to={`/accounts/2/followers/`}>Followers</NavLink></li>
-      <li><NavLink to="/accounts/login/">Login</NavLink></li>
-      <li><button type='button'>Logout</button></li>
-    </ul>
-    </header>
-  )
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
+
+const Header = (props) => {
+  const classes = useStyles();
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            Batch Maker
+          </Typography>
+          <Link href="/recipes" color="inherit">Recipes</Link>
+          <Link href="/recipes/new" color="inherit">New Recipe</Link>
+          { props.isAuthenticated
+            ? (
+              <Link component="button" variant="body1" color="inherit" onClick={props.handleLogout}>Logout</Link>
+            ) : (
+              <Link href="/accounts/login" color="inherit">Login</Link>
+            )
+          }
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+}
+
+Header.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired
+}
+
+
 
 export default Header;

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
+import RecipeCard from './RecipeCard';
 
 class RecipeList extends Component {
 
   state = {
     recipes: [],
   }
-
+  
   componentDidMount() {
     fetch(`/api/v1/recipes/`)
       .then((res) => {
@@ -20,9 +21,13 @@ class RecipeList extends Component {
   }
 
   render() {
-    const recipes = this.state.recipes.map(recipe => <li key={recipe.id}><a href={`/recipes/${recipe.id}`}>{recipe.name}</a></li>)
+    const recipes = this.state.recipes.map(recipe => (
+      <RecipeCard key={recipe.id} recipe={recipe}/>
+    ));
     return (
-        <ul>{recipes}</ul>
+        <React.Fragment>
+          {recipes}
+        </React.Fragment>
     )
   }
 }
