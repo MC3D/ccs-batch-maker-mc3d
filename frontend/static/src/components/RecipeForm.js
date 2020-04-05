@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
-import requireAuth from './RequireAuth';
+import Cookies from 'js-cookie';
 
 class RecipeForm extends Component {
 
-  constructor(props){
-    super(props);
-
-    this.state = {
+  state = {
       image: null,
       preview: '',
       name: '',
@@ -22,39 +19,69 @@ class RecipeForm extends Component {
       steps: []
     }
 
-    this.handleInput = this.handleInput.bind(this);
-    this.handleImage = this.handleImage.bind(this);
-    this.handleCheckbox = this.handleCheckbox.bind(this);
+  handleInput = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
   }
 
-  handleInput(e) {
-    this.setState({[e.target.name]: e.target.value});
-  }
-
-  handleImage(e) {
+  handleImage = (e) => {
     // The selected files' are returned by the element's HTMLInputElement.files property — this returns a FileList object, which contains a list of File objects
     let file = e.target.files[0];
     // we'll use this value when we save the image (see _saveImage)
-    this.setState({image: file});
+    this.setState({
+      image: file
+    });
     // The FileReader object lets web applications asynchronously read the contents of files (or raw data buffers) stored on the user's computer, using File or Blob objects to specify the file or data to read.
     let reader = new FileReader();
     // A handler for the loadend event. This event is triggered each time the reading operation is completed (either in success or failure).
     reader.onloadend = () => {
-      this.setState({preview: reader.result});
+      this.setState({
+        preview: reader.result
+      });
     }
     // Starts reading the contents of the specified Blob, once finished, the result attribute contains a data: URL representing the file's data.
     reader.readAsDataURL(file);
   }
 
-  handleCheckbox(e) {
-    this.setState({[e.target.name]: !this.state[e.target.name]});
+  handleCheckbox = (e) => {
+    this.setState({
+      [e.target.name]: !this.state[e.target.name]
+    });
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    const recipe = { ...this.state };
+    const keys = Object.keys(recipe);
+
+    let formData = new FormData();
+    keys.forEach(key => formData.append(key, recipe[key]));
+
+    const csrftoken = Cookies.get('csrftoken');
+    const options = {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': csrftoken,
+      }
+    }
+
+    fetch(`/api/v1/recipes/`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
 
 
   render() {
-    // console.log(this.props)
     return (
-      <form onSubmit={(e) => this.props.handleSubmit(e, this.state)}>
+      <form onSubmit={this.handleSubmit}>
         <input type="file" name='image' onChange = {this.handleImage}/>
 
         <label htmlFor="name">Name</label>
@@ -108,8 +135,4 @@ class RecipeForm extends Component {
   }
 }
 
-
-
-
-
-export default requireAuth(RecipeForm);
+export default RecipeForm;

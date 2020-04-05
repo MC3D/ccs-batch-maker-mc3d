@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import requireAuth from './RequireAuth';
 
 function IngredientList(props) {
   return (
@@ -8,4 +7,4 @@ function IngredientList(props) {
   );
 }
 
-export default requireAuth(IngredientList);
+export default IngredientList;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Footer(props) {
+const Footer = () => {
   return (
     <footer>
       <p>© 2020 MC3D</p>

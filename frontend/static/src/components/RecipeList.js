@@ -1,11 +1,30 @@
-import React from 'react';
-import requireAuth from './RequireAuth';
+import React, {Component} from 'react';
 
-function RecipeList(props) {
-  const recipes = props.recipes.map(recipe => <li key={recipe.id}><button type='button' onClick={() => props.selectRecipe(recipe)}>{recipe.name}</button></li>)
-  return (
-    <ul>{recipes}</ul>
-  );
+class RecipeList extends Component {
+
+  state = {
+    recipes: [],
+  }
+
+  componentDidMount() {
+    fetch(`/api/v1/recipes/`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({recipes: data});
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
+  }
+
+  render() {
+    const recipes = this.state.recipes.map(recipe => <li key={recipe.id}><a href={`/recipes/${recipe.id}`}>{recipe.name}</a></li>)
+    return (
+        <ul>{recipes}</ul>
+    )
+  }
 }
 
-export default requireAuth(RecipeList);
+export default RecipeList;

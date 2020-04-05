@@ -1,28 +1,49 @@
-import React, {Component} from 'react';
-import {Link} from "react-router-dom";
-import {Button, TextField} from '@material-ui/core';
+import React, { Component } from 'react';
+import { Link } from "react-router-dom";
+import { Button, TextField } from '@material-ui/core';
+import Cookies from 'js-cookie';
 
 class LoginForm extends Component {
 
-  constructor(props){
-    super(props);
-
-    this.state = {
+  state = {
       username: '',
       email: '',
       password: ''
     }
 
-    this.handleInput = this.handleInput.bind(this);
+  handleInput = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
   }
 
-  handleInput(e) {
-    this.setState({[e.target.name]: e.target.value});
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    const csrftoken = Cookies.get('csrftoken');
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(this.state),
+      headers: {
+        'X-CSRFToken': csrftoken,
+        'Content-Type': 'application/json'
+      }
+    }
+
+    fetch(`/api/v1/rest-auth/login/`, options)
+      .then((response) => response.json())
+      .then((data) => {
+        localStorage.setItem('ccs-batch-maker', JSON.stringify(data));
+        this.props.history.push('/recipes');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
 
   render() {
     return (
-      <form onSubmit={(e) => this.props.handleSubmit(e, this.state)}>
+      <form onSubmit={this.handleSubmit}>
         <TextField
               variant="outlined"
               margin="normal"

@@ -2,13 +2,21 @@ import React, {Component} from 'react';
 
 class RecipeDetail extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {}
-  }
-  
+  state = {
+    
+  };
+
   componentDidMount() {
-    this.setState(this.props.selectedRecipe);
+    fetch(`/api/v1/recipes/${this.props.match.params.recipeId}/`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({...data});
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
   }
 
   render() {

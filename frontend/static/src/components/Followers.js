@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import requireAuth from './RequireAuth';
 
 class Following extends Component{
-  componentDidMount() {
-    this.props.fetchData();
-  }
+  // componentDidMount() {
+  //   this.props.fetchData();
+  // }
 
   render() {
     const users = this.props.users.map(user => (
@@ -19,4 +18,4 @@ class Following extends Component{
   }
 }
 
-export default requireAuth(Following);
+export default Following;

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import Quagga from 'quagga';
 import {Button, TextField} from '@material-ui/core';
-import requireAuth from './RequireAuth';
 
 class IngredientForm extends Component {
 
@@ -101,4 +100,4 @@ class IngredientForm extends Component {
 
 
 
-export default requireAuth(IngredientForm);
+export default IngredientForm;
