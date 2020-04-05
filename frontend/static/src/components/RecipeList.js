@@ -6,9 +6,15 @@ class RecipeList extends Component {
   state = {
     recipes: [],
   }
-  
+
   componentDidMount() {
-    fetch(`/api/v1/recipes/`)
+    const options = {
+      headers: {
+        'Authorization': `Token ${JSON.parse(localStorage.getItem('ccs-batch-maker')).key}`,
+      }
+    }
+
+    fetch(`/api/v1/recipes/`, options)
       .then((res) => {
         return res.json();
       })

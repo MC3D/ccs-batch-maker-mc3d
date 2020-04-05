@@ -6,8 +6,7 @@ import Footer from './Footer';
 
 class BaseLayout extends Component {
 
-  handleLogout = (e) => {
-
+  logout = () => {
     const csrftoken = Cookies.get('csrftoken');
     const options = {
       method: 'POST',
@@ -32,7 +31,7 @@ class BaseLayout extends Component {
     const isAuthenticated = localStorage.getItem('ccs-batch-maker') ? true : false;
     return (
       <React.Fragment>
-        <Header isAuthenticated={isAuthenticated} handleLogout={this.handleLogout}/>
+        <Header isAuthenticated={isAuthenticated} logout={this.logout}/>
         { this.props.children }
         <Footer />
       </React.Fragment>

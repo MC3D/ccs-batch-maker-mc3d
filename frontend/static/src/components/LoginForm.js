@@ -17,7 +17,7 @@ class LoginForm extends Component {
     });
   }
 
-  handleSubmit = (e) => {
+  authenticate = (e) => {
     e.preventDefault();
     const csrftoken = Cookies.get('csrftoken');
     const options = {
@@ -41,9 +41,8 @@ class LoginForm extends Component {
   }
 
   render() {
-    console.log(this.props)
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.authenticate}>
         <TextField
               variant="outlined"
               margin="normal"
