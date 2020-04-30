@@ -1,48 +1,51 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { AppBar, Toolbar, Typography, Link } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useContext } from 'react';
+import { Link } from "react-router-dom";
+import Cookies from 'js-cookie';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
+import { AppContext } from './../containers/App';
 
-const Header = (props) => {
-  const classes = useStyles();
+function Header(props) {
+  const { state: store, dispatch: dispatchContext } = useContext(AppContext);
+
+  const logout = () => {
+      const csrftoken = Cookies.get('csrftoken');
+      const options = {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+        }
+      }
+
+      fetch(`/api/v1/rest-auth/logout/`, options)
+        .then((res) => res.json())
+        .then((resJSON) => {
+          localStorage.removeItem("ccs-batch-maker-token");
+          localStorage.removeItem("ccs-batch-maker-user");
+          dispatchContext({
+            type: 'LOGOUT',
+          });
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Batch Maker
-          </Typography>
-          <Link href="/recipes" color="inherit">Recipes</Link>
-          <Link href="/recipes/new" color="inherit">New Recipe</Link>
-          { props.isAuthenticated
-            ? (
-              <Link component="button" variant="body1" color="inherit" onClick={props.logout}>Logout</Link>
-            ) : (
-              <Link href="/accounts/login" color="inherit">Login</Link>
-            )
+      <nav className='d-flex'>
+        <h1>Batch Maker</h1>
+        <ul className='ml-auto d-flex'>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/recipes">Recipes</Link></li>
+          <li><Link to="/recipes/new">New Recipe</Link></li>
+
+          { store.isAuthenticated
+            ?
+              <li><button type='button' onClick={logout}>Logout</button></li>
+            :
+              <li><Link to="/accounts/login">Login</Link></li>
           }
-        </Toolbar>
-      </AppBar>
-    </div>
+        </ul>
+      </nav>
   );
-}
-
-Header.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired
-}
-
-
-
+};
 export default Header;

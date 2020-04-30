@@ -14,13 +14,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TokenSerializer(serializers.ModelSerializer):
-    id  = serializers.ReadOnlyField(source='user.id')
-    username = serializers.ReadOnlyField(source='user.username')
-    email = serializers.ReadOnlyField(source='user.email')
+    # id  = serializers.ReadOnlyField(source='user.id')
+    # username = serializers.ReadOnlyField(source='user.username')
+    # email = serializers.ReadOnlyField(source='user.email')
+    # is_staff = serializers.ReadOnlyField(source='user.is_staff')
+    user = UserSerializer()
 
     class Meta:
         model = TokenModel
-        fields = ('key', 'id', 'username', 'email')
+        fields = ('key', 'user')
 
 
 class ConnectionSerializer(serializers.ModelSerializer):

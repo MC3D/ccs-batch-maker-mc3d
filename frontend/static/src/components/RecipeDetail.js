@@ -9,7 +9,7 @@ class RecipeDetail extends Component {
   componentDidMount() {
     const options = {
       headers: {
-        'Authorization': `Token ${JSON.parse(localStorage.getItem('ccs-batch-maker')).key}`,
+        'Authorization': `Token ${localStorage.getItem('ccs-batch-maker-token')}`,
       }
     }
 
